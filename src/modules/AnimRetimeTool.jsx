@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Play, Pause, Upload, Plus, Trash2, Download, RefreshCw, Film, Clock, ChevronLeft, ChevronRight, Target, Flag, Activity, Zap, Layers, Calculator, Scissors } from 'lucide-react';
+import { Play, Pause, Upload, Plus, Trash2, Download, RefreshCw, Film, Clock, ChevronLeft, ChevronRight, Target, Flag, Activity, Zap, Layers, Calculator, Scissors, Gauge } from 'lucide-react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { Tooltip, SliderInput } from '../components/ui';
@@ -14,12 +14,15 @@ const PHASE_TYPES = {
   'Custom': { color: '#a855f7', label: 'Custom Phase' }
 };
 
+const MASTER_SPEEDS = [0.25, 0.5, 1.0, 1.5, 2.0];
+
 export default function AnimRetimeTool() {
   const [videoUrl, setVideoUrl] = useState('');
   const [videoDuration, setVideoDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [targetFps, setTargetFps] = useState(60);
+  const [masterSpeed, setMasterSpeed] = useState(1.0);
   
   // Video Trim Range (Start time & End time in seconds)
   const [trimStart, setTrimStart] = useState(0);
@@ -43,6 +46,9 @@ export default function AnimRetimeTool() {
   const trimStartRef = useRef(trimStart);
   const trimEndRef = useRef(trimEnd);
   useEffect(() => { trimStartRef.current = trimStart; trimEndRef.current = trimEnd; }, [trimStart, trimEnd]);
+
+  const masterSpeedRef = useRef(masterSpeed);
+  useEffect(() => { masterSpeedRef.current = masterSpeed; }, [masterSpeed]);
 
   const frameTime = 1 / targetFps;
   const clipDuration = Math.max(0.1, trimEnd - trimStart);
@@ -100,7 +106,7 @@ export default function AnimRetimeTool() {
     setNotifies(prev => prev.map(n => n.id === id ? { ...n, [key]: value } : n).sort((a, b) => a.frame - b.frame));
   };
 
-  // Live Simulation: Dynamic Play Rate Shift Loop within Trim Window
+  // Live Simulation: Dynamic Play Rate Shift Loop within Trim Window using Master Speed Factor
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !videoUrl || !isPlaying) return;
@@ -131,8 +137,9 @@ export default function AnimRetimeTool() {
           }
         }
 
-        if (activeNotify && videoRef.current.playbackRate !== activeNotify.multiplier) {
-          videoRef.current.playbackRate = activeNotify.multiplier;
+        const targetRate = activeNotify ? (activeNotify.multiplier * masterSpeedRef.current) : masterSpeedRef.current;
+        if (Math.abs(videoRef.current.playbackRate - targetRate) > 0.01) {
+          videoRef.current.playbackRate = targetRate;
         }
       }
       animId = requestAnimationFrame(checkPlaybackSpeed);
@@ -308,7 +315,7 @@ export default function AnimRetimeTool() {
               <div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ACTIVE RETIMED PHASE</div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
-                  {activeSection.label} ({activeSection.multiplier}x Speed)
+                  {activeSection.label} ({activeSection.multiplier}x Speed {masterSpeed !== 1.0 ? `@ ${masterSpeed}x Master` : ''})
                 </div>
               </div>
             </div>
@@ -438,9 +445,9 @@ export default function AnimRetimeTool() {
             />
           </div>
 
-          {/* Controls Toolbar */}
+          {/* Controls Toolbar with Master Playback Speed */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
               <button 
                 className="btn btn-primary" 
                 onClick={() => {
@@ -465,6 +472,30 @@ export default function AnimRetimeTool() {
               <button className="btn" onClick={() => handleSeek(trimStart)} disabled={!videoUrl}>
                 <RefreshCw size={16} /> Restart Clip
               </button>
+
+              {/* Master Playback Speed Selector */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '4px 10px', borderRadius: '8px', border: '1px solid var(--border-color)', marginLeft: '8px' }}>
+                <Gauge size={16} style={{ color: 'var(--primary)' }} />
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Master Speed:</span>
+                {MASTER_SPEEDS.map(spd => (
+                  <button 
+                    key={spd}
+                    onClick={() => setMasterSpeed(spd)}
+                    style={{
+                      background: masterSpeed === spd ? 'var(--primary)' : 'transparent',
+                      color: masterSpeed === spd ? '#fff' : 'var(--text-muted)',
+                      border: 'none',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '0.85rem'
+                    }}
+                  >
+                    {spd}x
+                  </button>
+                ))}
+              </div>
             </div>
 
             <button 
