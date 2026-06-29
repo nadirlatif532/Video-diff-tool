@@ -3,6 +3,7 @@ import { Play, Square, Upload, Repeat, HelpCircle, XCircle, Pause } from 'lucide
 import { createNoise2D } from 'simplex-noise';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import { Tooltip, SliderInput } from '../components/ui';
 import '../index.css';
 
 const AXES = ['pitch', 'yaw', 'roll', 'locX', 'locY', 'locZ', 'fov'];
@@ -72,28 +73,6 @@ const PRESETS = {
     }
   }
 };
-
-const Tooltip = ({ label, text }) => (
-  <span className="tooltip-wrap" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-    {label} <HelpCircle size={14} style={{ color: 'var(--text-muted)' }} />
-    <span className="tooltip-content">{text}</span>
-  </span>
-);
-
-const SliderInput = ({ value, onChange, min, max, step }) => (
-  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-    <div style={{ flex: 1, padding: '0 8px' }}>
-      <Slider min={min} max={max} step={step} value={value} onChange={onChange} />
-    </div>
-    <input 
-      type="number" 
-      step={step} 
-      value={value} 
-      onChange={e => onChange(Number(e.target.value))} 
-      style={{ width: '90px', padding: '8px', fontSize: '1rem', boxShadow: 'none' }}
-    />
-  </div>
-);
 
 export default function ScreenShakeTool() {
   const noise2D = useMemo(() => createNoise2D(), []);
@@ -468,24 +447,26 @@ export default function ScreenShakeTool() {
               </div>
               <div style={{ overflowY: 'auto', flex: 1 }}>
                 {AXES.map(ax => (
-                  <div 
-                    key={ax} 
-                    style={{ 
-                      padding: '16px 20px',
-                      borderBottom: '1px solid var(--border)',
-                      background: activeAxis === ax ? 'var(--bg-main)' : 'transparent',
-                      borderLeft: `4px solid ${activeAxis === ax ? 'var(--accent)' : 'transparent'}`,
-                      cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      transition: 'background 0.2s'
-                    }}
-                    onClick={() => setActiveAxis(ax)}
-                  >
-                    <div>
-                      <div style={{ fontWeight: '700', fontSize: '1rem', color: activeAxis === ax ? 'var(--text-main)' : 'var(--text-muted)' }}>
-                        {AXIS_LABELS[ax].split(' ')[0]}
-                      </div>
-                      <div style={{ width: '50px', height: '6px', background: 'var(--shadow-grey-800)', marginTop: '8px', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div style={{ height: '100%', width: `${vuMeters[ax] * 100}%`, background: 'var(--primary)', transition: 'width 0.05s linear' }} />
+                    <div 
+                      key={ax} 
+                      style={{ 
+                        padding: '16px 20px',
+                        borderBottom: '1px solid var(--border)',
+                        background: activeAxis === ax ? 'var(--bg-main)' : 'transparent',
+                        cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        transition: 'background 0.2s'
+                      }}
+                      onClick={() => setActiveAxis(ax)}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          {activeAxis === ax && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)' }} />}
+                          <div style={{ fontWeight: '700', fontSize: '1rem', color: activeAxis === ax ? 'var(--text-main)' : 'var(--text-muted)' }}>
+                            {AXIS_LABELS[ax].split(' ')[0]}
+                          </div>
+                        </div>
+                        <div style={{ width: '50px', height: '6px', background: 'var(--shadow-grey-800)', marginTop: '8px', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: '100%', transform: `scaleX(${vuMeters[ax]})`, transformOrigin: 'left', background: 'var(--primary)', transition: 'transform 0.05s linear' }} />
                       </div>
                     </div>
                     

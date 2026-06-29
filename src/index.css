@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
 :root {
   /* Muted Olive */
   --muted-olive-50: #f3f7ed; --muted-olive-100: #e7efdc; --muted-olive-200: #cfe0b8;
@@ -56,7 +58,7 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: var(--bg-main);
   color: var(--text-main);
   line-height: 1.6;
@@ -75,7 +77,6 @@ body {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease;
   box-shadow: 4px 0 20px rgba(0,0,0,0.5);
   z-index: 50;
 }
@@ -220,7 +221,7 @@ input[type="number"]:focus, select:focus {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.2s ease-out;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -322,6 +323,8 @@ input[type="number"]:focus, select:focus {
 
 /* Video Containers */
 .video-preview-container {
+  position: relative;
+  display: flex;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 15px 40px rgba(0,0,0,0.6);
@@ -382,4 +385,127 @@ input[type="number"]:focus, select:focus {
   border-width: 6px;
   border-style: solid;
   border-color: var(--border-light) transparent transparent transparent;
+}
+
+/* Video Diff Tool & Generic Components Restored */
+
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.dropzone:hover {
+  border-color: var(--primary);
+  background: var(--bg-panel-hover);
+  color: var(--text-main);
+}
+
+.stack-toggle-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  background: var(--bg-panel);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.video-preview-container.vertical-stack {
+  flex-direction: column;
+}
+
+.video-half {
+  flex: 1;
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  background: #000;
+}
+
+.video-half.vertical {
+  width: 100%;
+}
+
+.video-element {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+.video-overlay-info {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(17, 15, 21, 0.8);
+  color: var(--accent);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+
+.actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.progress-container {
+  margin-top: 24px;
+}
+
+.progress-bar-bg {
+  height: 8px;
+  background: var(--bg-main);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--success);
+  transform-origin: left;
+  transition: transform 0.3s ease-out;
+}
+
+.progress-text {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.spin {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
 }

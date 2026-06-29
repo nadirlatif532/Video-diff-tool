@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Menu, Settings, Swords, Activity, HelpCircle, X } from 'lucide-react';
+import { Menu, Settings, Swords, Activity, HelpCircle, X, Zap } from 'lucide-react';
 import VideoDiffTool from './modules/VideoDiffTool';
 import ScreenShakeTool from './modules/ScreenShakeTool';
+import HitStopTool from './modules/HitStopTool';
 import './index.css';
 
 const TUTORIALS = {
@@ -26,12 +27,23 @@ const TUTORIALS = {
         <p><strong style={{ color: 'var(--text-main)' }}>4. Solo & Mute:</strong> Use the [Solo] and [Mute] buttons to isolate exactly what one specific axis feels like, or to hide an axis.</p>
       </div>
     )
+  },
+  'hitstop': {
+    title: 'Hit-Stop & Freeze Studio Tutorial',
+    content: (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)' }}>
+        <p><strong style={{ color: 'var(--text-main)' }}>1. Weapon Presets:</strong> Choose a preset (e.g., "Heavy Greatsword Cleave") to immediately feel different combat impact profiles.</p>
+        <p><strong style={{ color: 'var(--text-main)' }}>2. Trigger Strike:</strong> Click "TRIGGER IMPACT STRIKE" during playback to test how the freeze, screen flash, camera kick, and audio snap feel together.</p>
+        <p><strong style={{ color: 'var(--text-main)' }}>3. Fine-Tune Impact:</strong> Adjust Hit-Stop Freeze (ms), Slow-Mo speed easing, camera impulse, and visual impact flash styles.</p>
+        <p><strong style={{ color: 'var(--text-main)' }}>4. Video Export:</strong> Export your tuned clip directly as a video file for your team or portfolio showcase.</p>
+      </div>
+    )
   }
 };
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeModule, setActiveModule] = useState('screenshake');
+  const [activeModule, setActiveModule] = useState('hitstop');
   const [showTutorial, setShowTutorial] = useState(false);
 
   return (
@@ -61,6 +73,14 @@ export default function App() {
             {sidebarOpen && <span>Screenshake Synth</span>}
           </button>
           
+          <button 
+            className={`nav-item ${activeModule === 'hitstop' ? 'active' : ''}`}
+            onClick={() => setActiveModule('hitstop')}
+          >
+            <Zap size={20} />
+            {sidebarOpen && <span>Hit-Stop Studio</span>}
+          </button>
+
           <button 
             className={`nav-item ${activeModule === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveModule('settings')}
@@ -92,6 +112,7 @@ export default function App() {
 
         {activeModule === 'video-diff' && <VideoDiffTool />}
         {activeModule === 'screenshake' && <ScreenShakeTool />}
+        {activeModule === 'hitstop' && <HitStopTool />}
         {activeModule === 'settings' && (
           <div className="app-container">
             <div className="glass-panel">
@@ -104,3 +125,4 @@ export default function App() {
     </div>
   );
 }
+
