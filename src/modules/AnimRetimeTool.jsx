@@ -25,12 +25,11 @@ export default function AnimRetimeTool() {
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(2.0);
 
-  // Notifies array: list of keyframes where play rate changes
-  // { id, frame, multiplier, phase, label }
+  // Initial Notifies setup with exact labels: Start, Anticipation, Impact, Recovery
   const [notifies, setNotifies] = useState([
     { id: '1', frame: 0, multiplier: 1.0, phase: 'Telegraph', label: 'Start' },
-    { id: '2', frame: 12, multiplier: 1.6, phase: 'Anticipation', label: 'Fast Windup' },
-    { id: '3', frame: 32, multiplier: 0.35, phase: 'Impact', label: 'Heavy Impact' },
+    { id: '2', frame: 12, multiplier: 1.6, phase: 'Anticipation', label: 'Anticipation' },
+    { id: '3', frame: 32, multiplier: 0.35, phase: 'Impact', label: 'Impact' },
     { id: '4', frame: 44, multiplier: 1.25, phase: 'Recovery', label: 'Recovery' }
   ]);
   const [selectedNotifyId, setSelectedNotifyId] = useState('2');
@@ -316,17 +315,48 @@ export default function AnimRetimeTool() {
           )}
         </div>
 
-        {/* Video Trim Window Controls */}
-        <div style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', color: 'var(--text-main)' }}>
-              <Scissors size={16} style={{ color: 'var(--primary)' }} /> Video Trim Clip Window
+        {/* Video Trim Window Controls (Slider + Direct Text Inputs) */}
+        <div style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', color: 'var(--text-main)', fontSize: '0.95rem' }}>
+              <Scissors size={18} style={{ color: 'var(--primary)' }} /> Video Trim Clip Window
             </span>
-            <span style={{ color: 'var(--text-muted)' }}>
-              Range: <strong style={{ color: '#fff' }}>{trimStart.toFixed(2)}s</strong> → <strong style={{ color: '#fff' }}>{trimEnd.toFixed(2)}s</strong> (Frames #{startRawFrame} → #{endRawFrameMax})
-            </span>
+
+            {/* Direct Text Box Inputs for Trim Range */}
+            <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Trim Start (s):</label>
+                <input 
+                  type="number" 
+                  step={0.01}
+                  value={trimStart} 
+                  onChange={e => {
+                    const val = Number(e.target.value);
+                    if (!isNaN(val) && val >= 0 && val < trimEnd) setTrimStart(val);
+                  }}
+                  style={{ width: '85px', padding: '6px 8px', borderRadius: '6px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-main)', color: '#fff', fontSize: '0.9rem', textAlign: 'center' }}
+                />
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(F#{startRawFrame})</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Trim End (s):</label>
+                <input 
+                  type="number" 
+                  step={0.01}
+                  value={trimEnd} 
+                  onChange={e => {
+                    const val = Number(e.target.value);
+                    if (!isNaN(val) && val > trimStart) setTrimEnd(val);
+                  }}
+                  style={{ width: '85px', padding: '6px 8px', borderRadius: '6px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-main)', color: '#fff', fontSize: '0.9rem', textAlign: 'center' }}
+                />
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(F#{endRawFrameMax})</span>
+              </div>
+            </div>
           </div>
 
+          {/* Slider Controls */}
           <div style={{ padding: '4px 8px' }}>
             <Slider 
               range 
