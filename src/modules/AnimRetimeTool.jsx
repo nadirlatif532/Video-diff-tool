@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Play, Pause, Upload, Plus, Trash2, Download, RefreshCw, Film, Clock, ChevronLeft, ChevronRight, Target, Flag, Activity, Zap, Layers, Calculator } from 'lucide-react';
+import { Play, Pause, Upload, Plus, Trash2, Download, RefreshCw, Film, Clock, ChevronLeft, ChevronRight, Target, Flag, Activity, Zap, Layers, Calculator, Scissors } from 'lucide-react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { Tooltip, SliderInput } from '../components/ui';
@@ -21,13 +21,17 @@ export default function AnimRetimeTool() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [targetFps, setTargetFps] = useState(60);
   
+  // Video Trim Range (Start time & End time in seconds)
+  const [trimStart, setTrimStart] = useState(0);
+  const [trimEnd, setTrimEnd] = useState(2.0);
+
   // Notifies array: list of keyframes where play rate changes
   // { id, frame, multiplier, phase, label }
   const [notifies, setNotifies] = useState([
     { id: '1', frame: 0, multiplier: 1.0, phase: 'Telegraph', label: 'Start' },
-    { id: '2', frame: 10, multiplier: 1.6, phase: 'Anticipation', label: 'Fast Windup' },
-    { id: '3', frame: 26, multiplier: 0.35, phase: 'Impact', label: 'Heavy Impact' },
-    { id: '4', frame: 34, multiplier: 1.25, phase: 'Recovery', label: 'Recovery' }
+    { id: '2', frame: 12, multiplier: 1.6, phase: 'Anticipation', label: 'Fast Windup' },
+    { id: '3', frame: 32, multiplier: 0.35, phase: 'Impact', label: 'Heavy Impact' },
+    { id: '4', frame: 44, multiplier: 1.25, phase: 'Recovery', label: 'Recovery' }
   ]);
   const [selectedNotifyId, setSelectedNotifyId] = useState('2');
 
@@ -37,11 +41,20 @@ export default function AnimRetimeTool() {
   const notifiesRef = useRef(notifies);
   useEffect(() => { notifiesRef.current = notifies; }, [notifies]);
 
-  const frameTime = 1 / targetFps;
-  const currentRawFrame = Math.round(currentTime * targetFps);
-  const totalRawFrames = Math.round((videoDuration || 2.0) * targetFps);
+  const trimStartRef = useRef(trimStart);
+  const trimEndRef = useRef(trimEnd);
+  useEffect(() => { trimStartRef.current = trimStart; trimEndRef.current = trimEnd; }, [trimStart, trimEnd]);
 
-  // File Upload Handler
+  const frameTime = 1 / targetFps;
+  const clipDuration = Math.max(0.1, trimEnd - trimStart);
+  
+  // Frame mapping within trim range
+  const startRawFrame = Math.round(trimStart * targetFps);
+  const endRawFrameMax = Math.round(trimEnd * targetFps);
+  const currentRawFrame = Math.round(currentTime * targetFps);
+  const totalRawFrames = Math.max(1, endRawFrameMax - startRawFrame);
+
+  // Handle Video Upload & Duration Init
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -52,10 +65,16 @@ export default function AnimRetimeTool() {
     }
   };
 
+  const handleVideoMetadata = (e) => {
+    const dur = e.target.duration;
+    setVideoDuration(dur);
+    setTrimStart(0);
+    setTrimEnd(Number(dur.toFixed(2)));
+  };
+
   // Add Notify at current playhead frame
   const addNotifyAtCurrentFrame = () => {
     const frame = currentRawFrame;
-    // Don't add duplicate on same frame
     if (notifies.some(n => n.frame === frame)) return;
 
     const newNotify = {
@@ -82,7 +101,7 @@ export default function AnimRetimeTool() {
     setNotifies(prev => prev.map(n => n.id === id ? { ...n, [key]: value } : n).sort((a, b) => a.frame - b.frame));
   };
 
-  // Live Simulation: Dynamic Play Rate Shift Loop
+  // Live Simulation: Dynamic Play Rate Shift Loop within Trim Window
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !videoUrl || !isPlaying) return;
@@ -92,7 +111,14 @@ export default function AnimRetimeTool() {
     const checkPlaybackSpeed = () => {
       if (videoRef.current) {
         const t = videoRef.current.currentTime;
-        setCurrentTime(t);
+        
+        // Loop within trim window
+        if (t >= trimEndRef.current || t < trimStartRef.current) {
+          videoRef.current.currentTime = trimStartRef.current;
+        } else {
+          setCurrentTime(t);
+        }
+
         const curFrame = Math.round(t * targetFps);
 
         // Find active section notify
@@ -118,7 +144,7 @@ export default function AnimRetimeTool() {
   }, [videoUrl, isPlaying, targetFps]);
 
   const handleSeek = (newTime) => {
-    const clamped = Math.max(0, Math.min(videoDuration || 100, newTime));
+    const clamped = Math.max(trimStart, Math.min(trimEnd, newTime));
     if (videoRef.current) {
       videoRef.current.currentTime = clamped;
     }
@@ -143,7 +169,7 @@ export default function AnimRetimeTool() {
 
     for (let i = 0; i < sorted.length; i++) {
       const current = sorted[i];
-      const nextFrame = (i < sorted.length - 1) ? sorted[i + 1].frame : totalRawFrames;
+      const nextFrame = (i < sorted.length - 1) ? sorted[i + 1].frame : endRawFrameMax;
       const rawSpan = Math.max(0, nextFrame - current.frame);
       
       // Effective screen frames = Raw Frames / Multiplier
@@ -177,7 +203,7 @@ export default function AnimRetimeTool() {
       rawDurationSec: Number((totalRawFrames * frameTime).toFixed(3)),
       overallSpeedRatio: Number((totalRawFrames / Math.max(1, totalRetimedScreenFrames)).toFixed(2))
     };
-  }, [notifies, totalRawFrames, targetFps, frameTime]);
+  }, [notifies, endRawFrameMax, totalRawFrames, targetFps, frameTime]);
 
   const breakdownData = calculateBreakdown();
   const selectedNotify = notifies.find(n => n.id === selectedNotifyId);
@@ -251,7 +277,7 @@ export default function AnimRetimeTool() {
               ref={videoRef}
               src={videoUrl} 
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              onLoadedMetadata={(e) => setVideoDuration(e.target.duration)}
+              onLoadedMetadata={handleVideoMetadata}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onClick={() => {
@@ -290,12 +316,40 @@ export default function AnimRetimeTool() {
           )}
         </div>
 
+        {/* Video Trim Window Controls */}
+        <div style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', color: 'var(--text-main)' }}>
+              <Scissors size={16} style={{ color: 'var(--primary)' }} /> Video Trim Clip Window
+            </span>
+            <span style={{ color: 'var(--text-muted)' }}>
+              Range: <strong style={{ color: '#fff' }}>{trimStart.toFixed(2)}s</strong> → <strong style={{ color: '#fff' }}>{trimEnd.toFixed(2)}s</strong> (Frames #{startRawFrame} → #{endRawFrameMax})
+            </span>
+          </div>
+
+          <div style={{ padding: '4px 8px' }}>
+            <Slider 
+              range 
+              min={0} 
+              max={videoDuration || 2.0} 
+              step={frameTime} 
+              value={[trimStart, trimEnd]} 
+              onChange={val => {
+                setTrimStart(val[0]);
+                setTrimEnd(val[1]);
+              }}
+              trackStyle={[{ backgroundColor: '#10b981' }]}
+              handleStyle={[{ backgroundColor: '#10b981', borderColor: '#fff' }, { backgroundColor: '#10b981', borderColor: '#fff' }]}
+            />
+          </div>
+        </div>
+
         {/* Multiplier Track & Section Block Timeline */}
         <div style={{ padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
             <div>
-              Raw Frame: <strong style={{ color: 'var(--text-main)', fontSize: '1.1rem' }}>#{currentRawFrame}</strong> / {totalRawFrames}
+              Raw Frame: <strong style={{ color: 'var(--text-main)', fontSize: '1.1rem' }}>#{currentRawFrame}</strong> / {endRawFrameMax}
             </div>
             <div>
               Retimed Screen Output: <strong style={{ color: '#10b981', fontSize: '1.1rem' }}>{breakdownData.totalRetimedScreenFrames} Frames</strong> ({breakdownData.totalRetimedSeconds}s)
@@ -340,11 +394,11 @@ export default function AnimRetimeTool() {
             })}
           </div>
 
-          {/* Slider Scrubbing Track */}
+          {/* Slider Scrubbing Track within Trim Window */}
           <div style={{ position: 'relative', padding: '10px 0' }} ref={timelineRef}>
             <Slider 
-              min={0} 
-              max={videoDuration || 2.0} 
+              min={trimStart} 
+              max={trimEnd} 
               step={frameTime} 
               value={currentTime} 
               onChange={v => handleSeek(v)} 
@@ -376,6 +430,10 @@ export default function AnimRetimeTool() {
 
               <button className="btn" onClick={() => stepFrame(1)} disabled={!videoUrl}>
                 +1 Frame <ChevronRight size={18} />
+              </button>
+
+              <button className="btn" onClick={() => handleSeek(trimStart)} disabled={!videoUrl}>
+                <RefreshCw size={16} /> Restart Clip
               </button>
             </div>
 
@@ -432,11 +490,11 @@ export default function AnimRetimeTool() {
                         <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: color }} />
                         {sec.label}
                       </td>
-                      <td style={{ padding: '12px 10px' }}>F#{sec.startFrame} $\rightarrow$ F#{sec.endFrame} ({sec.rawSpan}f)</td>
+                      <td style={{ padding: '12px 10px' }}>F#{sec.startFrame} → F#{sec.endFrame} ({sec.rawSpan}f)</td>
                       <td style={{ padding: '12px 10px', fontWeight: 'bold', color: 'var(--primary)' }}>{sec.multiplier}x</td>
                       <td style={{ padding: '12px 10px', fontWeight: 'bold', color: '#10b981' }}>{sec.screenFrames} frames</td>
                       <td style={{ padding: '12px 10px' }}>{sec.durationMs}ms ({sec.durationSec}s)</td>
-                      <td style={{ padding: '12px 10px', color: 'var(--text-muted)' }}>{sec.startScreenTime}s $\rightarrow$ {sec.endScreenTime}s</td>
+                      <td style={{ padding: '12px 10px', color: 'var(--text-muted)' }}>{sec.startScreenTime}s → {sec.endScreenTime}s</td>
                     </tr>
                   );
                 })}
