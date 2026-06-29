@@ -333,10 +333,10 @@ export default function HitStopTool() {
             width: '100%',
             display: 'flex', 
             alignItems: 'center', 
-            justifyContent: 'center',
-            backgroundColor: '#030508',
-            borderRadius: '12px',
-            boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8)'
+            backgroundColor: 'var(--bg-main)',
+            borderRadius: '0px',
+            border: '2px solid var(--border)',
+            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)'
           }}
         >
           {videoUrl ? (

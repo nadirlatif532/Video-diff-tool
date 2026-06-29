@@ -354,7 +354,7 @@ export default function ScreenShakeTool() {
           </div>
         </div>
         
-        <div className="video-preview-container" style={{ flex: 1, background: '#000', position: 'relative', overflow: 'hidden', border: 'none', borderRadius: '0' }}>
+        <div className="video-preview-container" style={{ flex: 1, background: 'var(--bg-main)', position: 'relative', overflow: 'hidden', border: '2px solid var(--border)', borderRadius: '0' }}>
           {!videoUrl ? (
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
               <label className="dropzone" style={{ width: '100%', maxWidth: '800px', padding: '4rem', border: '2px dashed var(--border)', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '3rem', margin: 0, background: 'var(--bg-panel)', borderRadius: '12px', cursor: 'pointer', transition: 'background 0.2s' }}>
