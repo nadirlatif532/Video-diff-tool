@@ -231,7 +231,7 @@ export default function AnimRetimeTool() {
         
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           {/* Target FPS Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Target FPS:</span>
             {[15, 30, 60, 120].map(fps => (
               <button 
@@ -325,7 +325,7 @@ export default function AnimRetimeTool() {
         </div>
 
         {/* Video Trim Window Controls (Slider + Direct Text Inputs) */}
-        <div style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '10px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', color: 'var(--text-main)', fontSize: '0.95rem' }}>
               <Scissors size={18} style={{ color: 'var(--primary)' }} /> Video Trim Clip Window
@@ -343,7 +343,7 @@ export default function AnimRetimeTool() {
                     const val = Number(e.target.value);
                     if (!isNaN(val) && val >= 0 && val < trimEnd) setTrimStart(val);
                   }}
-                  style={{ width: '85px', padding: '6px 8px', borderRadius: '6px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-main)', color: '#fff', fontSize: '0.9rem', textAlign: 'center' }}
+                  style={{ width: '85px', padding: '6px 8px', borderRadius: '6px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-main)', color: '#fff', fontSize: '0.9rem', textAlign: 'center' }}
                 />
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(F#{startRawFrame})</span>
               </div>
@@ -358,7 +358,7 @@ export default function AnimRetimeTool() {
                     const val = Number(e.target.value);
                     if (!isNaN(val) && val > trimStart) setTrimEnd(val);
                   }}
-                  style={{ width: '85px', padding: '6px 8px', borderRadius: '6px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-main)', color: '#fff', fontSize: '0.9rem', textAlign: 'center' }}
+                  style={{ width: '85px', padding: '6px 8px', borderRadius: '6px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-main)', color: '#fff', fontSize: '0.9rem', textAlign: 'center' }}
                 />
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(F#{endRawFrameMax})</span>
               </div>
@@ -396,7 +396,7 @@ export default function AnimRetimeTool() {
           </div>
 
           {/* Color-Coded Phase Blocks Bar */}
-          <div style={{ position: 'relative', height: '36px', width: '100%', backgroundColor: '#0f172a', borderRadius: '8px', overflow: 'hidden', display: 'flex', border: '1px solid var(--border-color)' }}>
+          <div style={{ position: 'relative', height: '36px', width: '100%', backgroundColor: '#0f172a', borderRadius: '8px', overflow: 'hidden', display: 'flex', border: '1px solid var(--border)' }}>
             {breakdownData.sections.map(sec => {
               const pctWidth = (sec.rawSpan / Math.max(1, totalRawFrames)) * 100;
               const isSelected = sec.id === selectedNotifyId;
@@ -448,7 +448,7 @@ export default function AnimRetimeTool() {
           </div>
 
           {/* Redesigned Structured Control Deck (2 Clean Rows) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border)' }}>
             
             {/* Row 1: Primary Actions & Master Speed Deck */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
@@ -477,7 +477,7 @@ export default function AnimRetimeTool() {
               </div>
 
               {/* Master Playback Speed Selector Deck */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '6px 14px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '6px 14px', borderRadius: '8px', border: '1px solid var(--border)' }}>
                 <Gauge size={16} style={{ color: 'var(--primary)' }} />
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '500' }}>Master Speed:</span>
                 {MASTER_SPEEDS.map(spd => (
@@ -548,7 +548,7 @@ export default function AnimRetimeTool() {
         
         {/* Retiming Frame Breakdown Table */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h3 style={{ fontSize: '1.15rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontSize: '1.15rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>Retimed Section Windows Breakdown</span>
             <span style={{ fontSize: '0.85rem', color: '#10b981' }}>Overall Ratio: {breakdownData.overallSpeedRatio}x Speed</span>
           </h3>
@@ -556,7 +556,7 @@ export default function AnimRetimeTool() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                   <th style={{ padding: '10px' }}>Phase Section</th>
                   <th style={{ padding: '10px' }}>Raw Frames</th>
                   <th style={{ padding: '10px' }}>Play Rate</th>
@@ -599,7 +599,7 @@ export default function AnimRetimeTool() {
         {/* Inspector & Inverse Multiplier Calculator */}
         {selectedNotify && selectedSection ? (
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
               <h3 style={{ fontSize: '1.15rem', color: 'var(--primary)', margin: 0 }}>
                 Section Inspector
               </h3>
@@ -614,7 +614,7 @@ export default function AnimRetimeTool() {
                 type="text" 
                 value={selectedNotify.label} 
                 onChange={e => updateNotify(selectedNotify.id, 'label', e.target.value)}
-                style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', border: '1px solid var(--border-color)' }}
+                style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', border: '1px solid var(--border)' }}
               />
             </div>
 
@@ -623,7 +623,7 @@ export default function AnimRetimeTool() {
               <select 
                 value={selectedNotify.phase} 
                 onChange={e => updateNotify(selectedNotify.id, 'phase', e.target.value)}
-                style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', border: '1px solid var(--border-color)' }}
+                style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', border: '1px solid var(--border)' }}
               >
                 {Object.keys(PHASE_TYPES).map(p => <option key={p} value={p}>{PHASE_TYPES[p].label}</option>)}
               </select>
@@ -661,7 +661,7 @@ export default function AnimRetimeTool() {
                       updateNotify(selectedNotify.id, 'multiplier', computedMult);
                     }
                   }}
-                  style={{ width: '130px', padding: '8px', borderRadius: '6px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-main)', color: '#fff' }}
+                  style={{ width: '130px', padding: '8px', borderRadius: '6px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-main)', color: '#fff' }}
                 />
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Screen Frames @ {targetFps}fps</span>
               </div>

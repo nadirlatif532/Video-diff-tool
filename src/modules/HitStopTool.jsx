@@ -287,7 +287,7 @@ export default function HitStopTool() {
         
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           {/* Target FPS Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Target FPS:</span>
             {[24, 30, 60].map(fps => (
               <button 
@@ -519,7 +519,7 @@ export default function HitStopTool() {
         
         {/* Left Drawer: Markers List */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h3 style={{ fontSize: '1.15rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontSize: '1.15rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>Timeline Freeze Markers ({markers.length})</span>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>Click to select and seek</span>
           </h3>
@@ -544,7 +544,7 @@ export default function HitStopTool() {
                       padding: '14px 16px',
                       borderRadius: '10px',
                       backgroundColor: isSelected ? 'rgba(99, 102, 241, 0.18)' : 'rgba(255,255,255,0.03)',
-                      border: isSelected ? '2px solid var(--primary)' : '1px solid var(--border-color)',
+                      border: isSelected ? '2px solid var(--primary)' : '1px solid var(--border)',
                       cursor: 'pointer',
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -582,7 +582,7 @@ export default function HitStopTool() {
         {/* Right Drawer: Selected Marker Inspector Editor */}
         {selectedMarker ? (
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
               <h3 style={{ fontSize: '1.15rem', color: 'var(--primary)', margin: 0 }}>
                 Marker Inspector Settings
               </h3>
@@ -602,7 +602,7 @@ export default function HitStopTool() {
                 type="text" 
                 value={selectedMarker.label} 
                 onChange={e => updateMarker(selectedMarker.id, 'label', e.target.value)}
-                style={{ width: '100%', padding: '12px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', border: '1px solid var(--border-color)', fontSize: '1rem' }}
+                style={{ width: '100%', padding: '12px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', border: '1px solid var(--border)', fontSize: '1rem' }}
               />
             </div>
 
