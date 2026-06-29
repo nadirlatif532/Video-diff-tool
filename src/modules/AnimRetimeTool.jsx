@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Play, Pause, Upload, Plus, Trash2, Download, RefreshCw, Film, Clock, ChevronLeft, ChevronRight, Target, Flag, Activity, Zap, Layers, Calculator, Scissors, Gauge } from 'lucide-react';
+import { Play, Pause, Upload, Plus, Trash2, Download, RefreshCw, Film, Clock, ChevronLeft, ChevronRight, Target, Flag, Activity, Zap, Layers, Calculator, Scissors, Gauge, Volume2, VolumeX } from 'lucide-react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { Tooltip, SliderInput } from '../components/ui';
@@ -21,6 +21,7 @@ export default function AnimRetimeTool() {
   const [videoDuration, setVideoDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [targetFps, setTargetFps] = useState(60);
   const [masterSpeed, setMasterSpeed] = useState(1.0);
   
@@ -282,6 +283,7 @@ export default function AnimRetimeTool() {
             <video 
               ref={videoRef}
               src={videoUrl} 
+              muted={isMuted}
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               onLoadedMetadata={handleVideoMetadata}
               onPlay={() => setIsPlaying(true)}
@@ -445,7 +447,7 @@ export default function AnimRetimeTool() {
             />
           </div>
 
-          {/* Controls Toolbar with Master Playback Speed */}
+          {/* Controls Toolbar with Master Playback Speed & Audio Mute Button */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
               <button 
@@ -471,6 +473,21 @@ export default function AnimRetimeTool() {
 
               <button className="btn" onClick={() => handleSeek(trimStart)} disabled={!videoUrl}>
                 <RefreshCw size={16} /> Restart Clip
+              </button>
+
+              {/* Audio Mute / Unmute Button */}
+              <button 
+                className="btn" 
+                onClick={() => {
+                  const nextMuted = !isMuted;
+                  setIsMuted(nextMuted);
+                  if (videoRef.current) videoRef.current.muted = nextMuted;
+                }}
+                disabled={!videoUrl}
+                title={isMuted ? "Unmute Video Audio" : "Mute Video Audio"}
+              >
+                {isMuted ? <VolumeX size={18} style={{ color: '#ef4444' }} /> : <Volume2 size={18} />} 
+                {isMuted ? 'Muted' : 'Mute Audio'}
               </button>
 
               {/* Master Playback Speed Selector */}
