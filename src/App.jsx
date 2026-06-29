@@ -106,14 +106,6 @@ export default function App() {
             <Layers size={20} />
             {sidebarOpen && <span>Frame Counter</span>}
           </button>
-
-          <button 
-            className={`nav-item ${activeModule === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveModule('settings')}
-          >
-            <Settings size={20} />
-            {sidebarOpen && <span>Settings</span>}
-          </button>
         </nav>
       </aside>
 
@@ -140,14 +132,6 @@ export default function App() {
         {activeModule === 'screenshake' && <ScreenShakeTool />}
         {activeModule === 'hitstop' && <HitStopTool />}
         {activeModule === 'retime' && <AnimRetimeTool />}
-        {activeModule === 'settings' && (
-          <div className="app-container">
-            <div className="glass-panel">
-              <h2>Settings</h2>
-              <p className="subtitle">Module settings will go here.</p>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );
