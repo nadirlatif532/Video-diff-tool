@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Menu, Settings, Swords, Activity, HelpCircle, X, Zap } from 'lucide-react';
+import { Menu, Settings, Swords, Activity, HelpCircle, X, Zap, Layers } from 'lucide-react';
 import VideoDiffTool from './modules/VideoDiffTool';
 import ScreenShakeTool from './modules/ScreenShakeTool';
 import HitStopTool from './modules/HitStopTool';
+import AnimRetimeTool from './modules/AnimRetimeTool';
 import './index.css';
 
 const TUTORIALS = {
@@ -38,12 +39,23 @@ const TUTORIALS = {
         <p><strong style={{ color: 'var(--text-main)' }}>4. Video Export:</strong> Export your tuned clip directly as a video file for your team or portfolio showcase.</p>
       </div>
     )
+  },
+  'retime': {
+    title: 'Frame Counter & Retiming Tutorial',
+    content: (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)' }}>
+        <p><strong style={{ color: 'var(--text-main)' }}>1. Set Notifies:</strong> Click "Add AnimNotify" at keyframes where play rate multipliers change.</p>
+        <p><strong style={{ color: 'var(--text-main)' }}>2. Assign Phases:</strong> Categorize sections as Anticipation, Impact, Recovery, or Telegraph.</p>
+        <p><strong style={{ color: 'var(--text-main)' }}>3. Retimed Frame Math:</strong> Inspect the table to see exact screen frames rendered at 15, 30, 60, or 120 FPS.</p>
+        <p><strong style={{ color: 'var(--text-main)' }}>4. Inverse Calculator:</strong> Type your target output screen frames to auto-calculate the required play rate multiplier.</p>
+      </div>
+    )
   }
 };
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeModule, setActiveModule] = useState('hitstop');
+  const [activeModule, setActiveModule] = useState('retime');
   const [showTutorial, setShowTutorial] = useState(false);
 
   return (
@@ -82,6 +94,14 @@ export default function App() {
           </button>
 
           <button 
+            className={`nav-item ${activeModule === 'retime' ? 'active' : ''}`}
+            onClick={() => setActiveModule('retime')}
+          >
+            <Layers size={20} />
+            {sidebarOpen && <span>Frame Counter</span>}
+          </button>
+
+          <button 
             className={`nav-item ${activeModule === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveModule('settings')}
           >
@@ -113,6 +133,7 @@ export default function App() {
         {activeModule === 'video-diff' && <VideoDiffTool />}
         {activeModule === 'screenshake' && <ScreenShakeTool />}
         {activeModule === 'hitstop' && <HitStopTool />}
+        {activeModule === 'retime' && <AnimRetimeTool />}
         {activeModule === 'settings' && (
           <div className="app-container">
             <div className="glass-panel">
@@ -125,4 +146,5 @@ export default function App() {
     </div>
   );
 }
+
 
