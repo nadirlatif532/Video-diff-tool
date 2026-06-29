@@ -7,6 +7,11 @@ import { Tooltip, SliderInput } from '../components/ui';
 import '../index.css';
 
 const AXES = ['pitch', 'yaw', 'roll', 'locX', 'locY', 'locZ', 'fov'];
+const AXIS_CATEGORIES = [
+  { name: 'Rotation Oscillation', axes: ['pitch', 'yaw', 'roll'] },
+  { name: 'Location Oscillation', axes: ['locX', 'locY', 'locZ'] },
+  { name: 'FOV Oscillation', axes: ['fov'] }
+];
 const AXIS_LABELS = {
   pitch: 'Pitch (Rot X)', yaw: 'Yaw (Rot Y)', roll: 'Roll (Rot Z)',
   locX: 'Loc X (Left/Right)', locY: 'Loc Y (Up/Down)', locZ: 'Loc Z (Fwd/Back)', fov: 'FOV'
@@ -438,50 +443,59 @@ export default function ScreenShakeTool() {
         {/* Right Col: Axes Selection & Master Graph */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', height: '100%' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '290px 1fr', height: '100%' }}>
             
             {/* Axis List */}
-            <div style={{ background: 'var(--bg-panel-hover)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ padding: '24px', borderBottom: '1px solid var(--border)' }}>
-                <h3 style={{ fontSize: '1.1rem' }}>Oscillation Axes</h3>
+            <div style={{ background: 'var(--bg-panel-hover)', borderRight: '2px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ padding: '20px 24px', borderBottom: '2px solid var(--border)' }}>
+                <h3 style={{ fontSize: '1.05rem', margin: 0 }}>Oscillation Channels</h3>
               </div>
               <div style={{ overflowY: 'auto', flex: 1 }}>
-                {AXES.map(ax => (
-                    <div 
-                      key={ax} 
-                      style={{ 
-                        padding: '16px 20px',
-                        borderBottom: '1px solid var(--border)',
-                        background: activeAxis === ax ? 'var(--bg-main)' : 'transparent',
-                        cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                        transition: 'background 0.2s'
-                      }}
-                      onClick={() => setActiveAxis(ax)}
-                    >
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          {activeAxis === ax && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)' }} />}
-                          <div style={{ fontWeight: '700', fontSize: '1rem', color: activeAxis === ax ? 'var(--text-main)' : 'var(--text-muted)' }}>
-                            {AXIS_LABELS[ax].split(' ')[0]}
+                {AXIS_CATEGORIES.map(cat => (
+                  <div key={cat.name}>
+                    <div style={{ padding: '8px 20px', backgroundColor: 'var(--bg-main)', borderBottom: '1px solid var(--border)', borderTop: cat.name !== 'Rotation Oscillation' ? '2px solid var(--border)' : 'none', color: 'var(--accent)', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
+                      {cat.name}
+                    </div>
+                    {cat.axes.map(ax => (
+                      <div 
+                        key={ax} 
+                        style={{ 
+                          padding: '12px 20px',
+                          borderBottom: '1px solid var(--border)',
+                          background: activeAxis === ax ? 'var(--bg-panel)' : 'transparent',
+                          borderLeft: activeAxis === ax ? '4px solid var(--primary)' : '4px solid transparent',
+                          cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onClick={() => setActiveAxis(ax)}
+                      >
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ fontWeight: '700', fontSize: '0.9rem', color: activeAxis === ax ? 'var(--text-main)' : 'var(--text-muted)' }}>
+                              {AXIS_LABELS[ax]}
+                            </div>
+                          </div>
+                          <div style={{ width: '60px', height: '6px', background: 'var(--shadow-grey-800)', marginTop: '6px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                            <div style={{ height: '100%', width: '100%', transform: `scaleX(${vuMeters[ax]})`, transformOrigin: 'left', background: 'var(--primary)', transition: 'transform 0.05s linear' }} />
                           </div>
                         </div>
-                        <div style={{ width: '50px', height: '6px', background: 'var(--shadow-grey-800)', marginTop: '8px', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div style={{ height: '100%', width: '100%', transform: `scaleX(${vuMeters[ax]})`, transformOrigin: 'left', background: 'var(--primary)', transition: 'transform 0.05s linear' }} />
+                        
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button 
+                            className={`stack-btn ${axes[ax].solo ? 'active' : ''}`} 
+                            onClick={(e) => { e.stopPropagation(); toggleAxisBool(ax, 'solo'); }}
+                            title="Solo this axis"
+                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                          >Solo</button>
+                          <button 
+                            className={`stack-btn ${axes[ax].mute ? 'active' : ''}`} 
+                            onClick={(e) => { e.stopPropagation(); toggleAxisBool(ax, 'mute'); }}
+                            title="Mute this axis"
+                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                          >Mute</button>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button 
-                        className={`stack-btn ${axes[ax].solo ? 'active' : ''}`} 
-                        onClick={(e) => { e.stopPropagation(); toggleAxisBool(ax, 'solo'); }}
-                        title="Solo this axis"
-                      >Solo</button>
-                      <button 
-                        className={`stack-btn ${axes[ax].mute ? 'active' : ''}`} 
-                        onClick={(e) => { e.stopPropagation(); toggleAxisBool(ax, 'mute'); }}
-                        title="Mute this axis"
-                      >Mute</button>
-                    </div>
+                    ))}
                   </div>
                 ))}
               </div>

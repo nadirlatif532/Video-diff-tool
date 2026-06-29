@@ -355,8 +355,8 @@ export default function HitStopTool() {
               }}
             />
           ) : (
-            <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '4rem 2rem' }}>
-              <Film size={64} style={{ marginBottom: '1.5rem', opacity: 0.4 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: 'var(--text-muted)', padding: '2rem', width: '100%', height: '100%' }}>
+              <Film size={64} style={{ marginBottom: '1rem', opacity: 0.4 }} />
               <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--text-main)', fontWeight: '600' }}>No Video Loaded</p>
               <p style={{ fontSize: '0.95rem' }}>Upload a combat video clip to expand the workspace and begin editing frame holds.</p>
             </div>
