@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Technical Frame Matrix Palette (Strict Solid Tones) */
+  /* Technical Frame Matrix Palette (Strict Solid Tones - Matte Graphite & Slate) */
   --muted-olive-500: #86b14e;
   --muted-olive-400: #9ec171;
   
@@ -12,11 +12,11 @@
   --wine-plum-400: #c1717b;
   --wine-plum-600: #8e3e48;
   
-  --shadow-grey-950: #0a0c10;
-  --shadow-grey-900: #12151c;
-  --shadow-grey-800: #1d222d;
-  --shadow-grey-700: #2c3343;
-  --shadow-grey-600: #3e485e;
+  --shadow-grey-950: #141724;
+  --shadow-grey-900: #1a1e2d;
+  --shadow-grey-800: #252b3e;
+  --shadow-grey-700: #333b52;
+  --shadow-grey-600: #46526e;
 
   /* Semantic Mapping */
   --bg-main: var(--shadow-grey-950);
@@ -49,8 +49,8 @@ body {
   background-color: var(--bg-main);
   /* CAD Blueprint Grid Pattern */
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 32px 32px;
   background-attachment: fixed;
   color: var(--text-main);
@@ -92,7 +92,7 @@ body {
   height: 76px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 28px;
   border-bottom: 2px solid var(--border);
   gap: 16px;
   background: rgba(255,255,255,0.01);
@@ -112,7 +112,7 @@ body {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 18px 28px;
+  padding: 18px 32px;
   color: var(--text-muted);
   background: transparent;
   border: none;
@@ -141,17 +141,6 @@ body {
   background-color: var(--bg-panel-hover);
   color: var(--text-main);
   border-left: 4px solid var(--primary);
-}
-.nav-item.active::after {
-  content: "ACTIVE.SYS";
-  position: absolute;
-  right: 16px;
-  font-size: 0.65rem;
-  color: var(--primary);
-  border: 1px solid var(--primary);
-  padding: 2px 6px;
-  border-radius: 2px;
-  font-weight: 800;
 }
 .sidebar.collapsed .nav-item.active::after { display: none; }
 

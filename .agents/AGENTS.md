@@ -17,3 +17,13 @@ The following rules apply specifically to this workspace and all work done withi
 - **Performance Optimization**: For frequent high-speed updates (like the Screenshake Canvas rendering or dragging), use `requestAnimationFrame` combined with React `useRef` to avoid blocking the main thread or causing unnecessary React re-renders. Use `useMemo` for expensive calculations (e.g., initializing `simplex-noise`).
 - **Styling**: Stick to Vanilla CSS variables and semantic naming conventions for consistent theming across the application. Avoid overly complex inline styles when a CSS class is more appropriate.
 - **Module Splitting**: Feature modules (like `ScreenShakeTool` or `VideoDiffTool`) should live in their own dedicated files under `src/modules/` and be imported lazily or directly into the main `App.jsx` shell. Keep `App.jsx` strictly as a routing and layout shell.
+
+## Technical CAD Telemetry & Frame Matrix Brand Identity
+- **Background Aesthetic**: Do not use full black backgrounds. Maintain a soft, professional, matte slate/graphite tone (`#141724` to `#1a1e2d`). Use a custom 32px blueprint grid pattern for structural alignment.
+- **Translucency Constraint**: Do not use glassmorphism (translucency, backdrop blurs) or neo-brutalism (thick solid black borders, flat primary values). Maintain clean, 100% opaque slate cards with crisp 2px solid borders (`#333b52`) and sharp rectangular layout edges.
+- **Corner Notches & Tech Decor**: Use custom offset corner notches (`+` markers) on main panels to establish high-end technical blueprint styling.
+- **UI Label Standards**:
+  - Main phase markers: `Start`, `Anticipation`, `Impact`, `Recovery`, and `Cancel Window`.
+  - Buttons like horizontal/vertical layout stacking in comparison decks must use clear text labels (e.g. `Horizontal Stack`, `Vertical Stack`) instead of ambiguous icons.
+- **Motion Design (Framer Motion)**: Implement snappy, crisp, mechanical page transitions. Avoid slow fluid eases; use low-damping, high-stiffness spring curves (e.g., `duration: 0.15` with snappy cubic-beziers like `[0.16, 1, 0.3, 1]`) to emulate responsive hardware telemetry readouts.
+

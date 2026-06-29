@@ -465,11 +465,11 @@ export default function VideoDiffTool() {
       <div className="glass-panel" style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <button className={`stack-btn ${stackMode === 'horizontal' ? 'active' : ''}`} onClick={() => setStackMode('horizontal')} title="Side by Side">
-              <LayoutTemplate size={15} style={{ transform: 'rotate(-90deg)' }} />
+            <button className={`stack-btn ${stackMode === 'horizontal' ? 'active' : ''}`} onClick={() => setStackMode('horizontal')}>
+              Horizontal Stack
             </button>
-            <button className={`stack-btn ${stackMode === 'vertical' ? 'active' : ''}`} onClick={() => setStackMode('vertical')} title="Top / Bottom">
-              <SplitSquareHorizontal size={15} />
+            <button className={`stack-btn ${stackMode === 'vertical' ? 'active' : ''}`} onClick={() => setStackMode('vertical')}>
+              Vertical Stack
             </button>
           </div>
           {(v1.file && v2.file) && (

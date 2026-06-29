@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Menu, Settings, Swords, Activity, HelpCircle, X, Zap, Layers } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import VideoDiffTool from './modules/VideoDiffTool';
 import ScreenShakeTool from './modules/ScreenShakeTool';
 import HitStopTool from './modules/HitStopTool';
@@ -128,10 +129,20 @@ export default function App() {
           </div>
         )}
 
-        {activeModule === 'video-diff' && <VideoDiffTool />}
-        {activeModule === 'screenshake' && <ScreenShakeTool />}
-        {activeModule === 'hitstop' && <HitStopTool />}
-        {activeModule === 'retime' && <AnimRetimeTool />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeModule}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {activeModule === 'video-diff' && <VideoDiffTool />}
+            {activeModule === 'screenshake' && <ScreenShakeTool />}
+            {activeModule === 'hitstop' && <HitStopTool />}
+            {activeModule === 'retime' && <AnimRetimeTool />}
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );
