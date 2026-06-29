@@ -47,10 +47,10 @@ export default function VideoDiffTool() {
       // toBlobURL fetches from our local server (same-origin, always allowed),
       // then wraps the file in a blob: URL. The FFmpeg module worker then
       // does import(blobURL) which works because the ESM build has export default.
-      const base = window.location.origin + '/ffmpeg';
+      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
       await instance.load({
-        coreURL: await toBlobURL(`${base}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`, 'application/wasm'),
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
       });
       setFfmpeg(instance);
       setReady(true);
