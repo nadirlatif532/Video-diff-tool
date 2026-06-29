@@ -4,6 +4,7 @@ import VideoDiffTool from './modules/VideoDiffTool';
 import ScreenShakeTool from './modules/ScreenShakeTool';
 import HitStopTool from './modules/HitStopTool';
 import AnimRetimeTool from './modules/AnimRetimeTool';
+import CombatLogo from './components/CombatLogo';
 import './index.css';
 
 const TUTORIALS = {
@@ -65,7 +66,12 @@ export default function App() {
           <button className="icon-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
             <Menu size={24} />
           </button>
-          {sidebarOpen && <h2>Combat Toolkit</h2>}
+          {sidebarOpen && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <CombatLogo size={28} />
+              <h2 style={{ margin: 0 }}>Combat Toolkit</h2>
+            </div>
+          )}
         </div>
         
         <nav style={{ flex: 1, padding: '16px 0' }}>

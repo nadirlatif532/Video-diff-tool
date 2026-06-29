@@ -447,53 +447,39 @@ export default function AnimRetimeTool() {
             />
           </div>
 
-          {/* Controls Toolbar with Master Playback Speed & Audio Mute Button */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <button 
-                className="btn btn-primary" 
-                onClick={() => {
-                  if (videoRef.current) {
-                    if (isPlaying) videoRef.current.pause();
-                    else videoRef.current.play();
-                  }
-                }}
-                disabled={!videoUrl}
-              >
-                {isPlaying ? <Pause size={18} /> : <Play size={18} />} {isPlaying ? 'Pause' : 'Play Simulation'}
-              </button>
+          {/* Redesigned Structured Control Deck (2 Clean Rows) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', backgroundColor: 'rgba(15, 23, 42, 0.4)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+            
+            {/* Row 1: Primary Actions & Master Speed Deck */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                <button 
+                  className="btn btn-primary" 
+                  onClick={() => {
+                    if (videoRef.current) {
+                      if (isPlaying) videoRef.current.pause();
+                      else videoRef.current.play();
+                    }
+                  }}
+                  disabled={!videoUrl}
+                  style={{ padding: '10px 24px', fontSize: '1rem' }}
+                >
+                  {isPlaying ? <Pause size={18} /> : <Play size={18} />} {isPlaying ? 'Pause' : 'Play Simulation'}
+                </button>
 
-              <button className="btn" onClick={() => stepFrame(-1)} disabled={!videoUrl}>
-                <ChevronLeft size={18} /> -1 Frame
-              </button>
+                <button 
+                  className="btn btn-primary" 
+                  onClick={addNotifyAtCurrentFrame}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#10b981', borderColor: '#10b981', padding: '10px 22px', fontSize: '0.95rem' }}
+                >
+                  <Plus size={18} /> Add AnimNotify at Frame #{currentRawFrame}
+                </button>
+              </div>
 
-              <button className="btn" onClick={() => stepFrame(1)} disabled={!videoUrl}>
-                +1 Frame <ChevronRight size={18} />
-              </button>
-
-              <button className="btn" onClick={() => handleSeek(trimStart)} disabled={!videoUrl}>
-                <RefreshCw size={16} /> Restart Clip
-              </button>
-
-              {/* Audio Mute / Unmute Button */}
-              <button 
-                className="btn" 
-                onClick={() => {
-                  const nextMuted = !isMuted;
-                  setIsMuted(nextMuted);
-                  if (videoRef.current) videoRef.current.muted = nextMuted;
-                }}
-                disabled={!videoUrl}
-                title={isMuted ? "Unmute Video Audio" : "Mute Video Audio"}
-              >
-                {isMuted ? <VolumeX size={18} style={{ color: '#ef4444' }} /> : <Volume2 size={18} />} 
-                {isMuted ? 'Muted' : 'Mute Audio'}
-              </button>
-
-              {/* Master Playback Speed Selector */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '4px 10px', borderRadius: '8px', border: '1px solid var(--border-color)', marginLeft: '8px' }}>
+              {/* Master Playback Speed Selector Deck */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-main)', padding: '6px 14px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                 <Gauge size={16} style={{ color: 'var(--primary)' }} />
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Master Speed:</span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '500' }}>Master Speed:</span>
                 {MASTER_SPEEDS.map(spd => (
                   <button 
                     key={spd}
@@ -502,11 +488,12 @@ export default function AnimRetimeTool() {
                       background: masterSpeed === spd ? 'var(--primary)' : 'transparent',
                       color: masterSpeed === spd ? '#fff' : 'var(--text-muted)',
                       border: 'none',
-                      padding: '3px 8px',
+                      padding: '4px 10px',
                       borderRadius: '4px',
                       cursor: 'pointer',
                       fontWeight: 'bold',
-                      fontSize: '0.85rem'
+                      fontSize: '0.85rem',
+                      transition: 'all 0.15s ease'
                     }}
                   >
                     {spd}x
@@ -515,13 +502,41 @@ export default function AnimRetimeTool() {
               </div>
             </div>
 
-            <button 
-              className="btn btn-primary" 
-              onClick={addNotifyAtCurrentFrame}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#10b981', borderColor: '#10b981' }}
-            >
-              <Plus size={18} /> Add AnimNotify at Frame #{currentRawFrame}
-            </button>
+            {/* Row 2: Transport Stepping & Utilities */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.75rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginRight: '4px' }}>Frame Step:</span>
+                <button className="btn" onClick={() => stepFrame(-1)} disabled={!videoUrl} style={{ padding: '6px 14px' }}>
+                  <ChevronLeft size={16} /> -1 Frame
+                </button>
+
+                <button className="btn" onClick={() => stepFrame(1)} disabled={!videoUrl} style={{ padding: '6px 14px' }}>
+                  +1 Frame <ChevronRight size={16} />
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                <button className="btn" onClick={() => handleSeek(trimStart)} disabled={!videoUrl} style={{ padding: '6px 14px' }}>
+                  <RefreshCw size={15} /> Restart Clip
+                </button>
+
+                <button 
+                  className="btn" 
+                  onClick={() => {
+                    const nextMuted = !isMuted;
+                    setIsMuted(nextMuted);
+                    if (videoRef.current) videoRef.current.muted = nextMuted;
+                  }}
+                  disabled={!videoUrl}
+                  style={{ padding: '6px 14px' }}
+                  title={isMuted ? "Unmute Video Audio" : "Mute Video Audio"}
+                >
+                  {isMuted ? <VolumeX size={16} style={{ color: '#ef4444' }} /> : <Volume2 size={16} />} 
+                  {isMuted ? 'Muted' : 'Mute Audio'}
+                </button>
+              </div>
+            </div>
+
           </div>
 
         </div>
